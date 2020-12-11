@@ -29,7 +29,7 @@ int main (){
 		if(numero != test.ETQ){
 			numfallos++;
 			variableglobal += 10;
-			printf("T: %d, Fallo de CACHE %d, ADDR %04X ETQ %X linea %02X palabra %02X bloque %02X");
+			printf("Nº Fallos: %d\nNº Variableglobal: %d\n", numfallos, variableglobal);
 		}
 	}fclose(f2);
   
