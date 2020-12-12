@@ -33,15 +33,13 @@ int main (){
 	}
 	
 	while(fscanf(ficheroRam,"%s",RAM)!=EOF){
-		printf("LINEA RAM: %s\n", RAM);
+		//printf("LINEA RAM: %s\n", RAM);
 	}
 	fclose(ficheroRam);
 	
 	//Dividir la RAM a RAMSexy
-	int i = 0; // Contador 1
-	int ii = 0; // Contador 2
-	for (i=0; i<128; i++){
-		for(ii=0; ii<8; ii++){
+	for (int i=0; i<128; i++){
+		for(int ii=0; ii<8; ii++){
 			RAMSexy[i][ii] = RAM[i*8+ii];
 		}
 	}
@@ -64,11 +62,11 @@ int main (){
 		unsigned int bloque = addr >> 5;
 		
 		//Se busca la etiqueta en la cache
-		pos=4;
+		int pos=4;
 		for (int i=0; i<4; ++i){
 			if(cache[i].ETQ == etq){
-				poss = i;
-				printf("T: %d, Acierto de CACHE, ADDR %04X ETQ %X linea %02X palabra %02X DATO %02X\n", tiempoGlobal, addr, etq, linea, palabra, bloque);
+				pos = i;
+				printf("T: %d, Acierto de CACHE, ADDR %04X ETQ %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, addr, etq, linea, palabra, bloque);
 				break;
 			}
 			else if (cache[i].ETQ==0xFF){
@@ -76,7 +74,7 @@ int main (){
 				tiempoGlobal+=10;
 				pos = i;
 				printf("T: %d, Fallo de CACHE %d, ADDR %04X ETQ %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, etq, linea, palabra, bloque);
-				printf("Cargando el bloque %02X en la linea %02x.\n", bloque, linea);
+				printf("Cargando el bloque %02X en la linea %02X.\n", bloque, linea);
 				break;
 			}
 		}
@@ -84,8 +82,8 @@ int main (){
 		if(pos == 4){
 			// Borrar dato
 			cache[0].ETQ = 0xFF;
-			for(int i=0; i<8; ii++){
-				cache[0].Datos[ii] = 0;
+			for(int i=0; i<8; i++){
+				cache[0].Datos[i] = 0;
 			}
 			pos = 0;
 		}
@@ -95,16 +93,14 @@ int main (){
 		for(int i=0; i<8; i++){
 			if(cache[pos].Datos[i] == 0){
 				cache[pos].Datos[i]=RAMSexy[bloque][7-i];
+				printf("\tETQ %X Dato %02X.\n", cache[pos].ETQ, RAMSexy[bloque][7-i]);
 				break;
 			}
 		}
-		sleep(2);
+		//sleep(2);
 	}
 	fclose(ficheroMemoria);
   
 	return 0;
 }
-
-//int huecoEnCache (unsigned int etq){}
-//unsigned int HexToDec (char hex[32])
 
