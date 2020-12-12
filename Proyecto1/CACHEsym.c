@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 typedef struct{
 	short int ETQ;
@@ -14,6 +15,7 @@ int main (){
 	unsigned char RAMSexy[128][8];
 	char leerLinea[4]= {'\0'};
 	unsigned int addr = 0;
+	char texto[100] = {'\0'};
 	
 	T_LINEA_CACHE cache[4];
 	for (int i=0; i<4; i++){
@@ -24,13 +26,16 @@ int main (){
 	}
 	
 	FILE *ficheroRam = fopen("RAM.bin","r");
+	
 	if(ficheroRam == NULL){
 		printf("Error en dicehro accesos_memoria.txt\n");
 		exit(-1);
 	}
+	
 	while(fscanf(ficheroRam,"%s",RAM)!=EOF){
 		printf("LINEA RAM: %s\n", RAM);
-	}fclose(ficheroRam);
+	}
+	fclose(ficheroRam);
 	
 	//Dividir la RAM a RAMSexy
 	int i = 0; // Contador 1
@@ -42,10 +47,12 @@ int main (){
 	}
 	
 	FILE *ficheroMemoria = fopen("accesos_memoria.txt", "r");
+	
 	if(ficheroMemoria == NULL){
 		printf("Error en dicehro accesos_memoria.txt\n");
 		exit(-1);
 	}
+	
 	while(fscanf(ficheroMemoria, "%s",leerLinea) != EOF){
 		
 		sscanf(leerLinea, "%x", &addr);
@@ -56,28 +63,48 @@ int main (){
 		unsigned int palabra = addr & 0b0000011111;
 		unsigned int bloque = addr >> 5;
 		
-		// Fallo
-		if(addr != cache[0].ETQ){
-			numfallos++;
-			tiempoGlobal += 10;
-			printf("T: %d, Fallo de CACHE %d, ADDR %04X ETQ %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, etq, linea, palabra, bloque);
-			
-			// Añadir a cache los datos leidos
-			// Se busca un hueco de cache vacio
-			/*int posicionDeCache = 0;
-			for(posicionDeCache=0; posicionDeCache<4;posicionDeCache++){
-				if(cache[posicionDeCache])
-			}*/
-			//printf("T: %d, Fallo de CACHE %d, ADDR %04X ETQ %X linea %02X palabra %02X bloque %02X", tiempoGlobal)
+		//Se busca la etiqueta en la cache
+		pos=4;
+		for (int i=0; i<4; ++i){
+			if(cache[i].ETQ == etq){
+				poss = i;
+				printf("T: %d, Acierto de CACHE, ADDR %04X ETQ %X linea %02X palabra %02X DATO %02X\n", tiempoGlobal, addr, etq, linea, palabra, bloque);
+				break;
+			}
+			else if (cache[i].ETQ==0xFF){
+				numfallos++;
+				tiempoGlobal+=10;
+				pos = i;
+				printf("T: %d, Fallo de CACHE %d, ADDR %04X ETQ %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, etq, linea, palabra, bloque);
+				printf("Cargando el bloque %02X en la linea %02x.\n", bloque, linea);
+				break;
+			}
 		}
-		// Hacierto
-		else{
-			printf("\n---Si esta en memoria---\n");
+		
+		if(pos == 4){
+			// Borrar dato
+			cache[0].ETQ = 0xFF;
+			for(int i=0; i<8; ii++){
+				cache[0].Datos[ii] = 0;
+			}
+			pos = 0;
 		}
-	}fclose(ficheroMemoria);
+		
+		// Guaradar datos en su posicion.
+		cache[pos].ETQ = etq;
+		for(int i=0; i<8; i++){
+			if(cache[pos].Datos[i] == 0){
+				cache[pos].Datos[i]=RAMSexy[bloque][7-i];
+				break;
+			}
+		}
+		sleep(2);
+	}
+	fclose(ficheroMemoria);
   
 	return 0;
 }
 
+//int huecoEnCache (unsigned int etq){}
 //unsigned int HexToDec (char hex[32])
 
