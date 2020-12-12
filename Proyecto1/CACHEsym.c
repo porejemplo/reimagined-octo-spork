@@ -100,6 +100,14 @@ int main (){
 		//sleep(2);
 	}
 	fclose(ficheroMemoria);
+	
+	for (int i=0; i<4; i++){
+        printf("ETQ: %X\tDatos", cache[i].ETQ);
+        for(int ii=0; ii<8; ii++){
+            printf("\t %02X", cache[i].Datos[ii]);
+        }
+        printf("\n");
+    }
   
 	return 0;
 }
