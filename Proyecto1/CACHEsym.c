@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#define SLEEP 2
 
 typedef struct{
 	short int ETQ;
@@ -101,7 +102,7 @@ int main (){
 				break;
 			}
 		}
-		sleep(2);
+		sleep(SLEEP);
 	}
 	fclose(ficheroMemoria);
 	
