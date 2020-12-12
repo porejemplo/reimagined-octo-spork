@@ -58,25 +58,16 @@ int main (){
 		sscanf(leerLinea, "%x", &addr);
 		
 		// Se sacan los valores de del addr
-		unsigned int etq = addr >> 7;
-		unsigned int linea = (addr & 0b0001100000) >> 5;
-		unsigned int palabra = addr & 0b0000011111;
-		unsigned int bloque = addr >> 5;
+		unsigned int etq = addr >> 5;//(addr & 0b1111100000) >> 5;
+		unsigned int linea = (addr & 0b0000011000) >> 3;
+		unsigned int palabra = addr & 0b0000000111;
+		unsigned int bloque = addr >> 3;
 		
 		//Se busca la etiqueta en la cache
 		int pos=4;
 		for (int i=0; i<4; ++i){
-			if(cache[i].ETQ == etq){
+			if(cache[i].ETQ == etq || cache[i].ETQ==0xFF){
 				pos = i;
-				printf("T: %d, ACIERTO de CACHE, addr %04X etq %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, addr, etq, linea, palabra, bloque);
-				break;
-			}
-			else if (cache[i].ETQ==0xFF){
-				numfallos++;
-				tiempoGlobal+=10;
-				pos = i;
-				printf("T: %d, FALLO de CACHE %d, addr %04X etq %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, etq, linea, palabra, bloque);
-				printf("Cargando el bloque %02X en la linea %02X.\n", bloque, linea);
 				break;
 			}
 		}
@@ -88,21 +79,25 @@ int main (){
 			for(int i=0; i<8; i++){
 				cache[pos].Datos[i]=0;
 			}
-			
 		}
 		
-		// Guaradar datos en su posicion.
-		cache[pos].ETQ = etq;
-		for(int i=0; i<8; i++){
-			if(cache[pos].Datos[i] == 0){
+		if (cache[pos].ETQ != etq){
+			printf("T: %d, FALLO de CACHE %d, addr %04X etq %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, etq, linea, palabra, bloque);
+			// Penalizaciones
+			numfallos++;
+			tiempoGlobal+=10;
+			// Guaradar datos en su posicion.
+			printf("Cargando el bloque %02X en la linea %02X.\n", bloque, linea);
+			cache[pos].ETQ = etq;
+			for(int i=0; i<8; i++){
 				cache[pos].Datos[i]=RAMSexy[bloque][7-i];
-				printf("\tETQ %X Dato %02X.\n", cache[pos].ETQ, RAMSexy[bloque][7-i]);
-				char c = RAMSexy[bloque][7-i];
-				strncat(texto, &c, 1);
-				break;
 			}
 		}
-		sleep(SLEEP);
+		//Guardar datos en palabra.
+		printf("T: %d, Acierto de CACHE, ADDR %04X ETQ %X linea %02X palabra %02X DATO %02X\n", tiempoGlobal, addr, etq, linea, palabra, cache[pos].Datos[palabra]);
+		char c = cache[pos].Datos[palabra];
+		strncat(texto, &c, 1);
+		//sleep(SLEEP);
 	}
 	fclose(ficheroMemoria);
 	
