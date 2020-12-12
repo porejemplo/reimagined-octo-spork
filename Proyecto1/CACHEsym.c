@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 typedef struct{
 	short int ETQ;
@@ -66,14 +67,14 @@ int main (){
 		for (int i=0; i<4; ++i){
 			if(cache[i].ETQ == etq){
 				pos = i;
-				printf("T: %d, Acierto de CACHE, ADDR %04X ETQ %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, addr, etq, linea, palabra, bloque);
+				printf("T: %d, ACIERTO de CACHE, addr %04X etq %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, addr, etq, linea, palabra, bloque);
 				break;
 			}
 			else if (cache[i].ETQ==0xFF){
 				numfallos++;
 				tiempoGlobal+=10;
 				pos = i;
-				printf("T: %d, Fallo de CACHE %d, ADDR %04X ETQ %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, etq, linea, palabra, bloque);
+				printf("T: %d, FALLO de CACHE %d, addr %04X etq %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, etq, linea, palabra, bloque);
 				printf("Cargando el bloque %02X en la linea %02X.\n", bloque, linea);
 				break;
 			}
@@ -81,11 +82,12 @@ int main (){
 		
 		if(pos == 4){
 			// Borrar dato
-			cache[0].ETQ = 0xFF;
-			for(int i=0; i<8; i++){
-				cache[0].Datos[i] = 0;
-			}
 			pos = 0;
+			cache[pos].ETQ = 0xFF;
+			for(int i=0; i<8; i++){
+				cache[pos].Datos[i] = 0;
+			}
+			
 		}
 		
 		// Guaradar datos en su posicion.
@@ -94,6 +96,8 @@ int main (){
 			if(cache[pos].Datos[i] == 0){
 				cache[pos].Datos[i]=RAMSexy[bloque][7-i];
 				printf("\tETQ %X Dato %02X.\n", cache[pos].ETQ, RAMSexy[bloque][7-i]);
+				char c = RAMSexy[bloque][7-i];
+				strncat(texto, &c, 1);
 				break;
 			}
 		}
@@ -104,10 +108,12 @@ int main (){
 	for (int i=0; i<4; i++){
         printf("ETQ: %X\tDatos", cache[i].ETQ);
         for(int ii=0; ii<8; ii++){
-            printf("\t %02X", cache[i].Datos[ii]);
+            printf(" %02X", cache[i].Datos[ii]);
         }
         printf("\n");
     }
+	
+	printf("%s.\n", texto);
   
 	return 0;
 }
