@@ -19,6 +19,7 @@ int main (){
 	unsigned int addr = 0;
 	char texto[100] = {'\0'};
 	
+	//Inicializamos todos los valores de la etiqueta a 0xFF y los datos a 0
 	T_LINEA_CACHE cache[4];
 	for (int i=0; i<4; i++){
 		cache[i].ETQ = 0xFF;
@@ -27,15 +28,15 @@ int main (){
 		}
 	}
 	
+	//Se abre el fichero RAM, si no existe el programa tenmina
 	FILE *ficheroRam = fopen("RAM.bin","r");
 	
 	if(ficheroRam == NULL){
 		printf("Error en dicehro accesos_memoria.txt\n");
 		exit(-1);
 	}
-	
+	//Se guarda el contenido del fichero RAM en memoria RAM
 	while(fscanf(ficheroRam,"%s",RAM)!=EOF){
-		//printf("LINEA RAM: %s\n", RAM);
 	}
 	fclose(ficheroRam);
 	
@@ -46,15 +47,16 @@ int main (){
 		}
 	}
 	
+	//Se abre el fichero memoria, si no existe el programa tenmina
 	FILE *ficheroMemoria = fopen("accesos_memoria.txt", "r");
 	
 	if(ficheroMemoria == NULL){
 		printf("Error en dicehro accesos_memoria.txt\n");
 		exit(-1);
 	}
-	
+	//Se guardan los contenidos del fichero en LeerLinea
 	while(fscanf(ficheroMemoria, "%s",leerLinea) != EOF){
-		
+		//Se convirtien strings a ints hexadecimales
 		sscanf(leerLinea, "%x", &addr);
 		
 		// Se sacan los valores de del addr
@@ -71,7 +73,7 @@ int main (){
 				break;
 			}
 		}
-		
+		//Se reecribe la etiqueta
 		if(pos == 4){
 			// Borrar dato
 			pos = 0;
@@ -80,7 +82,7 @@ int main (){
 				cache[pos].Datos[i]=0;
 			}
 		}
-		
+		//Se comprueba si las etiquetas coinciden
 		if (cache[pos].ETQ != etq){
 			printf("T: %d, FALLO de CACHE %d, addr %04X etq %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, bloque, linea, palabra, etq);
 			// Penalizaciones
@@ -88,6 +90,7 @@ int main (){
 			tiempoGlobal+=10;
 			// Guaradar datos en su posicion.
 			printf("Cargando el bloque %02X en la linea %02X.\n", bloque, linea);
+			//Escribimos la etiqueta y los datos correspondientes
 			cache[pos].ETQ = etq;
 			for(int i=0; i<8; i++){
 				cache[pos].Datos[i]=RAMSexy[etq][7-i];
@@ -97,17 +100,17 @@ int main (){
 		char c = cache[pos].Datos[7-palabra];
 		printf("T: %d, Acierto de CACHE, ADDR %04X ETQ %X linea %02X palabra %02X DATO %02X\n", tiempoGlobal, addr, bloque, linea, palabra, c);
 		strncat(texto, &c, 1);
-		//sleep(SLEEP);
+		sleep(SLEEP);
 	}
 	fclose(ficheroMemoria);
-	
+	//Imprime la etiqueta y los datos correspondientes
 	for (int i=0; i<4; i++){
-        printf("ETQ: %X\tDatos", cache[i].ETQ >> 2);
-        for(int ii=0; ii<8; ii++){
-            printf(" %02X", cache[i].Datos[ii]);
-        }
-        printf("\n");
-    }
+        	printf("ETQ: %X\tDatos", cache[i].ETQ >> 2);
+        	for(int ii=0; ii<8; ii++){
+            		printf(" %02X", cache[i].Datos[ii]);
+        	}
+        	printf("\n");
+    	}
 	
 	printf("%s.\n", texto);
   
