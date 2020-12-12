@@ -85,7 +85,7 @@ int main (){
 			pos = 0;
 			cache[pos].ETQ = 0xFF;
 			for(int i=0; i<8; i++){
-				cache[pos].Datos[i] = 0;
+				cache[pos].Datos[i]=0;
 			}
 			
 		}
@@ -101,7 +101,7 @@ int main (){
 				break;
 			}
 		}
-		//sleep(2);
+		sleep(2);
 	}
 	fclose(ficheroMemoria);
 	
