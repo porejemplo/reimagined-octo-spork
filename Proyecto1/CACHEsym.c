@@ -58,10 +58,10 @@ int main (){
 		sscanf(leerLinea, "%x", &addr);
 		
 		// Se sacan los valores de del addr
-		unsigned int etq = addr >> 5;//(addr & 0b1111100000) >> 5;
+		unsigned int bloque = addr >> 5;
 		unsigned int linea = (addr & 0b0000011000) >> 3;
 		unsigned int palabra = addr & 0b0000000111;
-		unsigned int bloque = addr >> 3;
+		unsigned int etq = addr >> 3;
 		
 		//Se busca la etiqueta en la cache
 		int pos=4;
@@ -82,7 +82,7 @@ int main (){
 		}
 		
 		if (cache[pos].ETQ != etq){
-			printf("T: %d, FALLO de CACHE %d, addr %04X etq %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, etq, linea, palabra, bloque);
+			printf("T: %d, FALLO de CACHE %d, addr %04X etq %X linea %02X palabra %02X bloque %02X\n", tiempoGlobal, numfallos, addr, bloque, linea, palabra, etq);
 			// Penalizaciones
 			numfallos++;
 			tiempoGlobal+=10;
@@ -90,19 +90,19 @@ int main (){
 			printf("Cargando el bloque %02X en la linea %02X.\n", bloque, linea);
 			cache[pos].ETQ = etq;
 			for(int i=0; i<8; i++){
-				cache[pos].Datos[i]=RAMSexy[bloque][7-i];
+				cache[pos].Datos[i]=RAMSexy[etq][7-i];
 			}
 		}
 		//Guardar datos en palabra.
-		printf("T: %d, Acierto de CACHE, ADDR %04X ETQ %X linea %02X palabra %02X DATO %02X\n", tiempoGlobal, addr, etq, linea, palabra, cache[pos].Datos[palabra]);
-		char c = cache[pos].Datos[palabra];
+		char c = cache[pos].Datos[7-palabra];
+		printf("T: %d, Acierto de CACHE, ADDR %04X ETQ %X linea %02X palabra %02X DATO %02X\n", tiempoGlobal, addr, bloque, linea, palabra, c);
 		strncat(texto, &c, 1);
 		//sleep(SLEEP);
 	}
 	fclose(ficheroMemoria);
 	
 	for (int i=0; i<4; i++){
-        printf("ETQ: %X\tDatos", cache[i].ETQ);
+        printf("ETQ: %X\tDatos", cache[i].ETQ >> 2);
         for(int ii=0; ii<8; ii++){
             printf(" %02X", cache[i].Datos[ii]);
         }
