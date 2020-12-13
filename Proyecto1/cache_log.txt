@@ -1,0 +1,31 @@
+T: 0, FALLO de CACHE 0, addr 02E4 etq 17 linea 00 palabra 04 bloque 5C
+Cargando el bloque 17 en la linea 00.
+T: 10, Acierto de CACHE, ADDR 02E4 ETQ 17 linea 00 palabra 04 DATO 70
+T: 10, FALLO de CACHE 1, addr 0200 etq 10 linea 00 palabra 00 bloque 40
+Cargando el bloque 10 en la linea 00.
+T: 20, Acierto de CACHE, ADDR 0200 ETQ 10 linea 00 palabra 00 DATO 6D
+T: 20, FALLO de CACHE 2, addr 0208 etq 10 linea 01 palabra 00 bloque 41
+Cargando el bloque 10 en la linea 01.
+T: 30, Acierto de CACHE, ADDR 0208 ETQ 10 linea 01 palabra 00 DATO 75
+T: 30, FALLO de CACHE 3, addr 0109 etq 8 linea 01 palabra 01 bloque 21
+Cargando el bloque 08 en la linea 01.
+T: 40, Acierto de CACHE, ADDR 0109 ETQ 8 linea 01 palabra 01 DATO 70
+T: 40, Acierto de CACHE, ADDR 010A ETQ 8 linea 01 palabra 02 DATO 71
+T: 40, Acierto de CACHE, ADDR 020B ETQ 10 linea 01 palabra 03 DATO 78
+T: 40, Acierto de CACHE, ADDR 0209 ETQ 10 linea 01 palabra 01 DATO 76
+T: 40, FALLO de CACHE 4, addr 001C etq 0 linea 03 palabra 04 bloque 03
+Cargando el bloque 00 en la linea 03.
+T: 50, Acierto de CACHE, ADDR 001C ETQ 0 linea 03 palabra 04 DATO 64
+T: 50, Acierto de CACHE, ADDR 001D ETQ 0 linea 03 palabra 05 DATO 65
+T: 50, FALLO de CACHE 5, addr 030B etq 18 linea 01 palabra 03 bloque 61
+Cargando el bloque 18 en la linea 01.
+T: 60, Acierto de CACHE, ADDR 030B ETQ 18 linea 01 palabra 03 DATO 65
+T: 60, Acierto de CACHE, ADDR 030F ETQ 18 linea 01 palabra 07 DATO 69
+T: 60, FALLO de CACHE 6, addr 0010 etq 0 linea 02 palabra 00 bloque 02
+Cargando el bloque 00 en la linea 02.
+T: 70, Acierto de CACHE, ADDR 0010 ETQ 0 linea 02 palabra 00 DATO 71
+ETQ: 0	Datos 78 77 76 75 74 73 72 71
+ETQ: 10	Datos 74 73 72 71 70 6F 6E 6D
+ETQ: 10	Datos 63 62 61 79 78 77 76 75
+ETQ: 8	Datos 76 75 74 73 72 71 70 6F
+pmupqxvdeeiq.
